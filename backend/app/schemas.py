@@ -39,6 +39,7 @@ class DefectCreate(BaseModel):
     reported_date: str
     status: str = "OPEN"
 
+
 class TrainScheduleCreate(BaseModel):
     train_number: str
     train_name: str
@@ -46,7 +47,9 @@ class TrainScheduleCreate(BaseModel):
     train_type: str
     journey_date: str
     arrival_time: str
-    departure_time: str    
+    departure_time: str
+    train_class: str
+
 
 class CorridorAvailabilityCreate(BaseModel):
     corridor: str
@@ -55,8 +58,7 @@ class CorridorAvailabilityCreate(BaseModel):
     start_time: str
     end_time: str
     available_minutes: int
-    status: str = "AVAILABLE" 
-
+    status: str = "AVAILABLE"
 
 
 class BlockPlanCreate(BaseModel):
@@ -66,4 +68,4 @@ class BlockPlanCreate(BaseModel):
     start_time: str
     end_time: str
     priority_score: int
-    status: str = "PLANNED"       
+    status: str = "PLANNED"

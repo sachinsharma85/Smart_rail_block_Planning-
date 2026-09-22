@@ -259,6 +259,17 @@ def calculate_priority(
     criticality: int,
     severity: int = 0
 ):
+    urgency = max(0, min(urgency, 10))
+    criticality = max(0, min(criticality, 10))
+    severity = max(0, min(severity, 10))
+
+    score = (
+        urgency * 0.40
+        + criticality * 0.40
+        + severity * 0.20
+    )
+
+    return round(score * 10, 2)
     score = (
         (urgency * 40)
         + (criticality * 40)

@@ -52,6 +52,7 @@ class Defect(Base):
     reported_date = Column(String)
     status = Column(String)
 
+
 class TrainSchedule(Base):
     __tablename__ = "train_schedules"
 
@@ -62,7 +63,8 @@ class TrainSchedule(Base):
     train_type = Column(String)
     journey_date = Column(String)
     arrival_time = Column(String)
-    departure_time = Column(String)    
+    departure_time = Column(String)
+    train_class = Column(String)
 
 
 class CorridorAvailability(Base):
