@@ -14,7 +14,7 @@ import {
   Legend,
 } from 'recharts';
 
-const API = 'http://localhost:8001';
+const API = 'https://smart-rail-block-planning.onrender.com';
 
 const navItems = [
   { id: 'dashboard', label: 'Dashboard', icon: '▦' },
