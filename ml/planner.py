@@ -88,6 +88,7 @@ def generate_plan(
     optimized_plans = optimize_blocks(
         prepared_tasks,
         corridors,
+        trains,
     )
 
     # -----------------------------------------

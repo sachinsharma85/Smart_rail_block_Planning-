@@ -1,5 +1,5 @@
-
 import { useEffect, useMemo, useState } from 'react';
+
 import {
   BarChart,
   Bar,
@@ -69,12 +69,20 @@ function getPriorityLabel(score) {
   return "Low";
 }
 
-function StatCard({ title, value, subtitle, icon, iconClass }) {
+function StatCard({
+  title,
+  value,
+  subtitle,
+  icon,
+  iconClass,
+}) {
   return (
-    <Card className="p-5 hover:shadow-md transition-shadow">
+    <Card className="p-5 hover:shadow-lg hover:-translate-y-0.5 transition-all duration-300">
       <div className="flex items-start justify-between">
         <div>
-          <p className="text-sm font-medium text-slate-500">{title}</p>
+          <p className="text-sm font-medium text-slate-500">
+            {title}
+          </p>
 
           <h3 className="text-3xl font-bold text-slate-900 mt-2">
             {value}
@@ -170,7 +178,11 @@ export default function App() {
 
       setBackendOnline(true);
     } catch (error) {
-      console.error("Backend connection error:", error);
+      console.error(
+        "Backend connection error:",
+        error
+      );
+
       setBackendOnline(false);
     } finally {
       setLoading(false);
@@ -209,7 +221,10 @@ export default function App() {
         data = {};
       }
 
-      console.log("AI Planning Response:", data);
+      console.log(
+        "AI Planning Response:",
+        data
+      );
 
       if (!response.ok) {
         throw new Error(
@@ -219,12 +234,7 @@ export default function App() {
         );
       }
 
-      // Refresh dashboard data after planning
       await fetchData();
-
-      // -------------------------------------------------------
-      // CASE 1: No pending tasks
-      // -------------------------------------------------------
 
       if (
         data?.message ===
@@ -232,15 +242,11 @@ export default function App() {
       ) {
         alert(
           "No Pending Maintenance Tasks\n\n" +
-          "All available maintenance tasks have already been planned."
+            "All available maintenance tasks have already been planned."
         );
 
         return;
       }
-
-      // -------------------------------------------------------
-      // CASE 2: AI returned summary
-      // -------------------------------------------------------
 
       if (data?.summary) {
         const summary = data.summary;
@@ -252,10 +258,14 @@ export default function App() {
           Number(summary.optimized_plans || 0);
 
         const conflictsDetected =
-          Number(summary.conflicts_detected || 0);
+          Number(
+            summary.conflicts_detected || 0
+          );
 
         const safePlans =
-          Number(summary.final_safe_plans || 0);
+          Number(
+            summary.final_safe_plans || 0
+          );
 
         const savedPlans =
           Number(
@@ -265,41 +275,36 @@ export default function App() {
         if (savedPlans > 0) {
           alert(
             "AI Block Plan Generated Successfully!\n\n" +
-            `Tasks Processed: ${totalTasks}\n` +
-            `Optimized Plans: ${optimizedPlans}\n` +
-            `Conflicts Detected: ${conflictsDetected}\n` +
-            `Safe Plans: ${safePlans}\n` +
-            `Plans Saved: ${savedPlans}`
+              `Tasks Processed: ${totalTasks}\n` +
+              `Optimized Plans: ${optimizedPlans}\n` +
+              `Conflicts Detected: ${conflictsDetected}\n` +
+              `Safe Plans: ${safePlans}\n` +
+              `Plans Saved: ${savedPlans}`
           );
         } else if (conflictsDetected > 0) {
           alert(
             "Planning Completed With Conflicts\n\n" +
-            `Tasks Processed: ${totalTasks}\n` +
-            `Conflicts Detected: ${conflictsDetected}\n` +
-            `Safe Plans: ${safePlans}\n` +
-            `Plans Saved: ${savedPlans}`
+              `Tasks Processed: ${totalTasks}\n` +
+              `Conflicts Detected: ${conflictsDetected}\n` +
+              `Safe Plans: ${safePlans}\n` +
+              `Plans Saved: ${savedPlans}`
           );
         } else {
           alert(
             "AI Planning Completed\n\n" +
-            `Tasks Processed: ${totalTasks}\n` +
-            `Optimized Plans: ${optimizedPlans}\n` +
-            `Plans Saved: ${savedPlans}`
+              `Tasks Processed: ${totalTasks}\n` +
+              `Optimized Plans: ${optimizedPlans}\n` +
+              `Plans Saved: ${savedPlans}`
           );
         }
 
         return;
       }
 
-      // -------------------------------------------------------
-      // CASE 3: Generic backend message
-      // -------------------------------------------------------
-
       alert(
         data?.message ||
           "AI planning process completed successfully."
       );
-
     } catch (error) {
       console.error(
         "AI Planning Error:",
@@ -308,13 +313,17 @@ export default function App() {
 
       alert(
         "Unable to generate block plan.\n\n" +
-        `${error.message}\n\n` +
-        "Please check whether the backend is running on port 8001."
+          `${error.message}\n\n` +
+          "Please check whether the backend is running."
       );
     } finally {
       setGenerating(false);
     }
   }
+
+  // =========================================================
+  // DASHBOARD DATA
+  // =========================================================
 
   const pendingTasks = tasks.filter(
     (task) =>
@@ -368,7 +377,8 @@ export default function App() {
 
       const departmentMatch =
         departmentFilter === "All" ||
-        task?.department === departmentFilter;
+        task?.department ===
+          departmentFilter;
 
       const corridorMatch =
         corridorFilter === "All" ||
@@ -449,7 +459,9 @@ export default function App() {
   return (
     <div className="min-h-screen bg-slate-100 text-slate-900">
 
-      {/* SIDEBAR OVERLAY */}
+      {/* =====================================================
+          SIDEBAR OVERLAY
+      ===================================================== */}
 
       {sidebarOpen && (
         <div
@@ -460,7 +472,9 @@ export default function App() {
         />
       )}
 
-      {/* SIDEBAR */}
+      {/* =====================================================
+          SIDEBAR
+      ===================================================== */}
 
       <aside
         className={`fixed left-0 top-0 bottom-0 w-72 bg-slate-950 text-white z-50 shadow-2xl transition-transform duration-300 ${
@@ -508,7 +522,7 @@ export default function App() {
                 }
                 className={`w-full flex items-center gap-3 px-4 py-3 rounded-xl text-left transition ${
                   page === item.id
-                    ? "bg-blue-600 text-white shadow-lg shadow-blue-900/20"
+                    ? "bg-red-600 text-white shadow-lg shadow-red-900/20"
                     : "text-slate-300 hover:bg-slate-800 hover:text-white"
                 }`}
               >
@@ -524,7 +538,7 @@ export default function App() {
 
           </nav>
 
-          {/* SIDEBAR FOOTER */}
+          {/* SIDEBAR STATUS */}
 
           <div className="p-4 border-t border-slate-800">
 
@@ -539,7 +553,7 @@ export default function App() {
                 <span
                   className={`w-2.5 h-2.5 rounded-full ${
                     backendOnline
-                      ? "bg-emerald-400"
+                      ? "bg-emerald-400 animate-pulse"
                       : "bg-red-400"
                   }`}
                 />
@@ -559,7 +573,9 @@ export default function App() {
         </div>
       </aside>
 
-      {/* TOP BAR */}
+      {/* =====================================================
+          TOP BAR
+      ===================================================== */}
 
       <header className="sticky top-0 z-30 bg-white/95 backdrop-blur border-b border-slate-200">
 
@@ -571,7 +587,7 @@ export default function App() {
               onClick={() =>
                 setSidebarOpen(true)
               }
-              className="w-11 h-11 bg-slate-950 text-white rounded-xl flex items-center justify-center text-xl hover:bg-slate-800 transition shadow-sm"
+              className="w-11 h-11 bg-slate-950 text-white rounded-xl flex items-center justify-center text-xl hover:bg-red-600 transition shadow-sm"
             >
               ☰
             </button>
@@ -604,7 +620,7 @@ export default function App() {
               <span
                 className={`w-2.5 h-2.5 rounded-full ${
                   backendOnline
-                    ? "bg-emerald-500"
+                    ? "bg-emerald-500 animate-pulse"
                     : "bg-red-500"
                 }`}
               />
@@ -623,64 +639,198 @@ export default function App() {
 
       </header>
 
-      {/* MAIN */}
+      {/* =====================================================
+          MAIN
+      ===================================================== */}
 
       <main className="p-5 md:p-8 max-w-[1600px] mx-auto">
 
-        {/* ================= DASHBOARD ================= */}
+        {/* ===================================================
+            DASHBOARD
+        =================================================== */}
 
         {page === "dashboard" && (
           <>
 
-            {/* HERO */}
+            {/* =================================================
+                HERO
+            ================================================= */}
 
-            <section className="rounded-3xl bg-gradient-to-br from-slate-950 via-slate-900 to-blue-950 text-white p-6 md:p-8 mb-6 overflow-hidden relative">
+            <section className="relative rounded-3xl overflow-hidden mb-6 min-h-[390px] bg-slate-950 text-white shadow-2xl">
 
-              <div className="absolute right-0 top-0 w-72 h-72 bg-blue-500/10 rounded-full blur-3xl" />
+              {/* Railway Background */}
 
-              <div className="relative flex flex-col lg:flex-row lg:items-center lg:justify-between gap-6">
+              <div
+                className="absolute inset-0 bg-cover bg-center"
+                style={{
+                  backgroundImage:
+                    "url('https://images.unsplash.com/photo-1474487548417-781cb71495f3?auto=format&fit=crop&w=1800&q=85')",
+                }}
+              />
 
-                <div>
+              {/* Dark Overlay */}
 
-                  <div className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full bg-white/10 border border-white/10 text-xs font-medium mb-4">
+              <div className="absolute inset-0 bg-slate-950/75" />
 
-                    <span className="w-2 h-2 bg-emerald-400 rounded-full" />
+              {/* Red Glow */}
 
-                    AI-POWERED RAILWAY OPERATIONS
+              <div className="absolute -right-20 -top-20 w-80 h-80 bg-red-600/20 rounded-full blur-3xl" />
+
+              {/* Green Glow */}
+
+              <div className="absolute right-20 bottom-0 w-64 h-64 bg-emerald-500/10 rounded-full blur-3xl" />
+
+              {/* Hero Content */}
+
+              <div className="relative z-10 p-7 md:p-10 min-h-[390px] flex flex-col justify-between">
+
+                {/* Top Status */}
+
+                <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-4">
+
+                  <div className="inline-flex items-center gap-2 w-fit px-4 py-2 rounded-full bg-black/30 border border-white/20 backdrop-blur-md">
+
+                    <span className="relative flex h-3 w-3">
+
+                      <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-emerald-400 opacity-75" />
+
+                      <span className="relative inline-flex rounded-full h-3 w-3 bg-emerald-400" />
+
+                    </span>
+
+                    <span className="text-xs font-bold tracking-widest">
+                      SYSTEM OPERATIONAL
+                    </span>
 
                   </div>
 
-                  <h2 className="text-2xl md:text-4xl font-bold">
-                    Smart Maintenance Block Planning
-                  </h2>
+                  <div className="hidden md:flex items-center gap-2 text-xs text-slate-300 bg-black/30 backdrop-blur-md px-4 py-2 rounded-full border border-white/10">
 
-                  <p className="text-slate-300 max-w-2xl mt-3 leading-relaxed">
-                    Optimize railway maintenance blocks
-                    using asset criticality, maintenance
-                    urgency, corridor availability and
-                    train movement conflict detection.
-                  </p>
+                    <span className="text-red-400">
+                      ●
+                    </span>
+
+                    AI PLANNING ENGINE
+
+                    <span className="text-emerald-400">
+                      ACTIVE
+                    </span>
+
+                  </div>
 
                 </div>
 
-                <button
-                  onClick={generateBlockPlan}
-                  disabled={
-                    generating ||
-                    !backendOnline
-                  }
-                  className="shrink-0 px-5 py-3.5 rounded-xl bg-blue-600 hover:bg-blue-500 disabled:bg-slate-700 disabled:cursor-not-allowed font-semibold shadow-lg shadow-blue-900/30 transition"
-                >
-                  {generating
-                    ? "⚙ Generating..."
-                    : "⚡ Generate Block Plan"}
-                </button>
+                {/* Main Hero Content */}
+
+                <div className="mt-10 max-w-4xl">
+
+                  <div className="flex items-center gap-3 mb-4">
+
+                    <div className="h-px w-10 bg-red-500" />
+
+                    <span className="text-red-400 text-xs md:text-sm font-bold tracking-[0.25em]">
+                      SMART RAIL · OPERATIONS CONTROL
+                    </span>
+
+                  </div>
+
+                  <h2 className="text-3xl md:text-5xl font-black leading-tight tracking-tight">
+
+                    AI-Powered Railway
+
+                    <span className="block text-red-400">
+                      Maintenance Intelligence
+                    </span>
+
+                  </h2>
+
+                  <p className="text-slate-300 max-w-2xl mt-5 text-sm md:text-base leading-relaxed">
+                    Smart Rail analyzes maintenance
+                    priorities, corridor availability
+                    and train movement conflicts to
+                    identify optimized maintenance
+                    block windows with minimal
+                    operational disruption.
+                  </p>
+
+                  {/* AI FLOW */}
+
+                  <div className="flex flex-wrap items-center gap-2 mt-6">
+
+                    <div className="px-3 py-2 rounded-lg bg-white/10 border border-white/10 backdrop-blur-md text-xs">
+                      Maintenance
+                    </div>
+
+                    <span className="text-red-400">
+                      →
+                    </span>
+
+                    <div className="px-3 py-2 rounded-lg bg-white/10 border border-white/10 backdrop-blur-md text-xs">
+                      Priority AI
+                    </div>
+
+                    <span className="text-red-400">
+                      →
+                    </span>
+
+                    <div className="px-3 py-2 rounded-lg bg-white/10 border border-white/10 backdrop-blur-md text-xs">
+                      Corridor
+                    </div>
+
+                    <span className="text-red-400">
+                      →
+                    </span>
+
+                    <div className="px-3 py-2 rounded-lg bg-white/10 border border-white/10 backdrop-blur-md text-xs">
+                      Train Conflict
+                    </div>
+
+                    <span className="text-red-400">
+                      →
+                    </span>
+
+                    <div className="px-3 py-2 rounded-lg bg-emerald-500/20 border border-emerald-400/20 text-emerald-300 text-xs">
+                      Optimal Block
+                    </div>
+
+                  </div>
+
+                </div>
+
+                {/* Bottom Controls */}
+
+                <div className="mt-8 flex flex-col sm:flex-row sm:items-center gap-4">
+
+                  <button
+                    onClick={generateBlockPlan}
+                    disabled={
+                      generating ||
+                      !backendOnline
+                    }
+                    className="w-fit px-6 py-3.5 rounded-xl bg-red-600 hover:bg-red-500 disabled:bg-slate-700 disabled:cursor-not-allowed font-bold shadow-lg shadow-red-900/30 transition-all duration-300 hover:scale-[1.02]"
+                  >
+                    {generating
+                      ? "⚙ AI Processing..."
+                      : "⚡ Generate AI Block Plan"}
+                  </button>
+
+                  <div className="flex items-center gap-3 text-xs text-slate-300">
+
+                    <span className="w-2 h-2 rounded-full bg-emerald-400 animate-pulse" />
+
+                    Real-time planning system connected
+
+                  </div>
+
+                </div>
 
               </div>
 
             </section>
 
-            {/* KPI CARDS */}
+            {/* =================================================
+                KPI CARDS
+            ================================================= */}
 
             <section className="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-5 gap-4 mb-6">
 
@@ -726,13 +876,15 @@ export default function App() {
 
             </section>
 
-            {/* CHARTS */}
+            {/* =================================================
+                CHARTS
+            ================================================= */}
 
             <section className="grid grid-cols-1 xl:grid-cols-2 gap-6 mb-6">
 
               {/* PRIORITY CHART */}
 
-              <Card className="p-5">
+              <Card className="p-5 hover:shadow-md transition">
 
                 <div className="flex items-center justify-between mb-5">
 
@@ -763,6 +915,7 @@ export default function App() {
                       width="100%"
                       height="100%"
                     >
+
                       <PieChart>
 
                         <Pie
@@ -797,6 +950,7 @@ export default function App() {
                         />
 
                       </PieChart>
+
                     </ResponsiveContainer>
                   )}
 
@@ -806,7 +960,7 @@ export default function App() {
 
               {/* DEPARTMENT CHART */}
 
-              <Card className="p-5">
+              <Card className="p-5 hover:shadow-md transition">
 
                 <div className="mb-5">
 
@@ -855,7 +1009,7 @@ export default function App() {
                           0,
                           0,
                         ]}
-                        fill="#2563eb"
+                        fill="#dc2626"
                       />
 
                     </BarChart>
@@ -868,7 +1022,9 @@ export default function App() {
 
             </section>
 
-            {/* FILTERS */}
+            {/* =================================================
+                FILTERS
+            ================================================= */}
 
             <Card className="p-5 mb-6">
 
@@ -896,8 +1052,9 @@ export default function App() {
                         e.target.value
                       )
                     }
-                    className="px-4 py-2.5 rounded-xl border border-slate-200 bg-white text-sm outline-none focus:ring-2 focus:ring-blue-500"
+                    className="px-4 py-2.5 rounded-xl border border-slate-200 bg-white text-sm outline-none focus:ring-2 focus:ring-red-500"
                   >
+
                     {departments.map(
                       (department) => (
                         <option
@@ -908,6 +1065,7 @@ export default function App() {
                         </option>
                       )
                     )}
+
                   </select>
 
                   <select
@@ -917,8 +1075,9 @@ export default function App() {
                         e.target.value
                       )
                     }
-                    className="px-4 py-2.5 rounded-xl border border-slate-200 bg-white text-sm outline-none focus:ring-2 focus:ring-blue-500"
+                    className="px-4 py-2.5 rounded-xl border border-slate-200 bg-white text-sm outline-none focus:ring-2 focus:ring-red-500"
                   >
+
                     {corridorOptions.map(
                       (corridor) => (
                         <option
@@ -929,6 +1088,7 @@ export default function App() {
                         </option>
                       )
                     )}
+
                   </select>
 
                 </div>
@@ -937,7 +1097,9 @@ export default function App() {
 
             </Card>
 
-            {/* ACTIVE PLANS TABLE */}
+            {/* =================================================
+                ACTIVE PLANS TABLE
+            ================================================= */}
 
             <Card className="overflow-hidden mb-6">
 
@@ -1104,20 +1266,33 @@ export default function App() {
 
             </Card>
 
-            {/* AI PIPELINE */}
+            {/* =================================================
+                AI PIPELINE
+            ================================================= */}
 
             <Card className="p-6">
 
               <div className="mb-6">
 
-                <h3 className="text-lg font-bold">
-                  AI Planning Engine
-                </h3>
+                <div className="flex items-center gap-3">
 
-                <p className="text-sm text-slate-500 mt-1">
-                  Intelligent maintenance block
-                  generation workflow
-                </p>
+                  <div className="w-10 h-10 rounded-xl bg-red-50 text-red-600 flex items-center justify-center">
+                    🤖
+                  </div>
+
+                  <div>
+
+                    <h3 className="text-lg font-bold">
+                      AI Planning Engine
+                    </h3>
+
+                    <p className="text-sm text-slate-500 mt-1">
+                      Intelligent maintenance block generation workflow
+                    </p>
+
+                  </div>
+
+                </div>
 
               </div>
 
@@ -1159,9 +1334,9 @@ export default function App() {
                       className="relative"
                     >
 
-                      <div className="p-4 rounded-2xl bg-slate-50 border border-slate-200 h-full">
+                      <div className="p-4 rounded-2xl bg-slate-50 border border-slate-200 h-full hover:border-red-200 hover:bg-red-50/30 transition">
 
-                        <div className="text-xs font-bold text-blue-600 mb-3">
+                        <div className="text-xs font-bold text-red-600 mb-3">
                           {number}
                         </div>
 
@@ -1176,7 +1351,7 @@ export default function App() {
                       </div>
 
                       {index < 4 && (
-                        <div className="hidden md:block absolute top-1/2 -right-2 text-slate-300">
+                        <div className="hidden md:block absolute top-1/2 -right-2 text-red-300 font-bold">
                           →
                         </div>
                       )}
@@ -1192,7 +1367,9 @@ export default function App() {
           </>
         )}
 
-        {/* ================= ASSETS ================= */}
+        {/* =====================================================
+            ASSETS
+        ===================================================== */}
 
         {page === "assets" && (
           <Card className="overflow-hidden">
@@ -1291,7 +1468,9 @@ export default function App() {
           </Card>
         )}
 
-        {/* ================= TASKS ================= */}
+        {/* =====================================================
+            TASKS
+        ===================================================== */}
 
         {page === "tasks" && (
           <Card className="overflow-hidden">
@@ -1415,7 +1594,9 @@ export default function App() {
           </Card>
         )}
 
-        {/* ================= DEFECTS ================= */}
+        {/* =====================================================
+            DEFECTS
+        ===================================================== */}
 
         {page === "defects" && (
           <Card className="overflow-hidden">
@@ -1543,7 +1724,9 @@ export default function App() {
           </Card>
         )}
 
-        {/* ================= TRAINS ================= */}
+        {/* =====================================================
+            TRAINS
+        ===================================================== */}
 
         {page === "trains" && (
           <Card className="overflow-hidden">
@@ -1654,7 +1837,9 @@ export default function App() {
           </Card>
         )}
 
-        {/* ================= CORRIDORS ================= */}
+        {/* =====================================================
+            CORRIDORS
+        ===================================================== */}
 
         {page === "corridors" && (
           <Card className="overflow-hidden">
@@ -1771,7 +1956,9 @@ export default function App() {
           </Card>
         )}
 
-        {/* ================= PLANS ================= */}
+        {/* =====================================================
+            PLANS
+        ===================================================== */}
 
         {page === "plans" && (
           <Card className="overflow-hidden">
@@ -1909,10 +2096,15 @@ export default function App() {
 
       </main>
 
-      {/* FOOTER */}
+      {/* =====================================================
+          FOOTER
+      ===================================================== */}
 
       <footer className="px-5 md:px-8 py-6 text-center text-xs text-slate-400">
-        Smart Rail Automatic Block Planning System · Railway Operations Control
+
+        Smart Rail Automatic Block Planning System
+        · Railway Operations Control
+
       </footer>
 
     </div>
