@@ -182,3 +182,89 @@
     border-right-color: var(--border);
   }
 }
+
+
+/* =====================================================
+   SMART RAIL — SUBTLE UI ANIMATIONS
+===================================================== */
+
+@keyframes smartRailFadeUp {
+  from {
+    opacity: 0;
+    transform: translateY(12px);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes smartRailPulse {
+  0%,
+  100% {
+    opacity: 1;
+  }
+
+  50% {
+    opacity: 0.55;
+  }
+}
+
+/* Dashboard cards */
+.smart-rail-card {
+  animation: smartRailFadeUp 0.45s ease-out both;
+  transition:
+    transform 0.25s ease,
+    box-shadow 0.25s ease;
+}
+
+.smart-rail-card:hover {
+  transform: translateY(-3px);
+}
+
+/* Hero sections */
+.smart-rail-hero {
+  animation: smartRailFadeUp 0.55s ease-out both;
+}
+
+/* System status indicator */
+.smart-rail-status-pulse {
+  animation: smartRailPulse 2s ease-in-out infinite;
+}
+
+/* AI processing state */
+.smart-rail-ai-processing {
+  animation: smartRailPulse 1.4s ease-in-out infinite;
+}
+
+/* Tables */
+.smart-rail-table-row {
+  transition: background-color 0.2s ease;
+}
+
+/* Buttons */
+.smart-rail-button {
+  transition:
+    transform 0.2s ease,
+    box-shadow 0.2s ease;
+}
+
+.smart-rail-button:hover {
+  transform: translateY(-1px);
+}
+
+/* Accessibility */
+@media (prefers-reduced-motion: reduce) {
+  .smart-rail-card,
+  .smart-rail-hero,
+  .smart-rail-status-pulse,
+  .smart-rail-ai-processing {
+    animation: none;
+  }
+
+  .smart-rail-card,
+  .smart-rail-button {
+    transition: none;
+  }
+}

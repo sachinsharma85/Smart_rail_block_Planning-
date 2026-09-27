@@ -855,7 +855,7 @@ export default function App() {
             <section className="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-5 gap-4 mb-6">
 
               <StatCard
-                title="Total Assets"
+                title="Maintenance Tasks"
                 value={assets.length}
                 subtitle="Registered infrastructure assets"
                 icon="◈"
@@ -904,80 +904,186 @@ export default function App() {
 
               {/* PRIORITY CHART */}
 
-              <Card className="p-5 hover:shadow-md transition">
+                <Card className="p-6 hover:shadow-lg transition-all duration-300 smart-rail-card">
 
-                <div className="flex items-center justify-between mb-5">
+                {/* Header */}
+              <div className="flex items-start justify-between mb-4">
 
-                  <div>
+             <div>
+             <div className="flex items-center gap-2">
 
-                    <h3 className="font-bold text-lg">
-                      Priority Distribution
-                    </h3>
+             <div className="w-9 h-9 rounded-xl bg-red-50 text-red-600 flex items-center justify-center font-bold">
+          ◆
+            </div>
 
-                    <p className="text-sm text-slate-500">
-                      Generated block plan priority
-                    </p>
+          <div>
+          <h3 className="font-bold text-lg text-slate-900">
+            Priority Distribution
+          </h3>
 
-                  </div>
+          <p className="text-sm text-slate-500">
+            Maintenance block priority analysis
+          </p>
+        </div>
 
-                  <span className="text-xs px-3 py-1.5 bg-slate-100 rounded-full font-medium">
-                    Live
-                  </span>
+      </div>
+    </div>
 
-                </div>
+    <div className="flex items-center gap-2 px-3 py-1.5 bg-emerald-50 border border-emerald-100 rounded-full">
 
-                <div className="h-72">
+      <span className="relative flex h-2 w-2">
 
-                  {plans.length === 0 ? (
-                    <EmptyState text="No block plan data available" />
-                  ) : (
-                    <ResponsiveContainer
-                      width="100%"
-                      height="100%"
-                    >
+        <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-emerald-400 opacity-75" />
 
-                      <PieChart>
+        <span className="relative inline-flex rounded-full h-2 w-2 bg-emerald-500" />
 
-                        <Pie
-                          data={priorityData}
-                          dataKey="value"
-                          nameKey="name"
-                          cx="50%"
-                          cy="50%"
-                          innerRadius={65}
-                          outerRadius={100}
-                          paddingAngle={4}
-                        >
+      </span>
 
-                          {priorityData.map(
-                            (entry, index) => (
-                              <Cell
-                                key={`cell-${index}`}
-                                fill={
-                                  COLORS[index]
-                                }
-                              />
-                            )
-                          )}
+      <span className="text-xs font-bold text-emerald-700">
+        LIVE
+      </span>
 
-                        </Pie>
+    </div>
 
-                        <Tooltip />
+  </div>
 
-                        <Legend
-                          verticalAlign="bottom"
-                          iconType="circle"
-                        />
+  {/* Divider */}
+  <div className="h-px bg-slate-100 mb-4" />
 
-                      </PieChart>
+  {/* Chart */}
+  <div className="relative h-72">
 
-                    </ResponsiveContainer>
-                  )}
+    {plans.length === 0 ? (
 
-                </div>
+      <EmptyState text="No block plan data available" />
 
-              </Card>
+    ) : (
 
+      <>
+
+        <ResponsiveContainer
+          width="100%"
+          height="100%"
+        >
+
+          <PieChart>
+
+            <Pie
+              data={priorityData}
+              dataKey="value"
+              nameKey="name"
+              cx="50%"
+              cy="45%"
+              innerRadius={68}
+              outerRadius={102}
+              paddingAngle={5}
+              cornerRadius={6}
+              stroke="none"
+            >
+
+              {priorityData.map(
+                (entry, index) => (
+
+                  <Cell
+                    key={`cell-${index}`}
+                    fill={COLORS[index]}
+                  />
+
+                )
+              )}
+
+            </Pie>
+
+            <Tooltip
+              contentStyle={{
+                borderRadius: "12px",
+                border: "1px solid #e2e8f0",
+                boxShadow:
+                  "0 10px 25px rgba(15, 23, 42, 0.10)",
+              }}
+            />
+
+            <Legend
+              verticalAlign="bottom"
+              iconType="circle"
+              iconSize={9}
+            />
+
+          </PieChart>
+
+        </ResponsiveContainer>
+
+        {/* Center information */}
+
+        <div className="absolute inset-0 flex items-center justify-center pointer-events-none">
+
+          <div className="text-center mb-10">
+
+            <div className="text-3xl font-black text-slate-900">
+              {plans.length}
+            </div>
+
+            <div className="text-[11px] font-bold tracking-wider text-slate-400 uppercase">
+              Total Plans
+            </div>
+
+          </div>
+
+        </div>
+
+      </>
+
+    )}
+
+  </div>
+
+  {/* Priority Summary */}
+
+  {plans.length > 0 && (
+
+    <div className="grid grid-cols-3 gap-3 mt-3">
+
+      <div className="rounded-xl bg-red-50 border border-red-100 p-3 text-center">
+
+        <div className="text-lg font-black text-red-600">
+          {priorityData[0]?.value || 0}
+        </div>
+
+        <div className="text-[11px] font-bold text-red-700 uppercase">
+          Critical
+        </div>
+
+      </div>
+
+      <div className="rounded-xl bg-amber-50 border border-amber-100 p-3 text-center">
+
+        <div className="text-lg font-black text-amber-600">
+          {priorityData[1]?.value || 0}
+        </div>
+
+        <div className="text-[11px] font-bold text-amber-700 uppercase">
+          High
+        </div>
+
+      </div>
+
+      <div className="rounded-xl bg-blue-50 border border-blue-100 p-3 text-center">
+
+        <div className="text-lg font-black text-blue-600">
+          {priorityData[2]?.value || 0}
+        </div>
+
+        <div className="text-[11px] font-bold text-blue-700 uppercase">
+          Low
+        </div>
+
+      </div>
+
+    </div>
+
+  )}
+
+</Card>
               {/* DEPARTMENT CHART */}
 
               <Card className="p-5 hover:shadow-md transition">
@@ -4140,7 +4246,7 @@ export default function App() {
   <div className="space-y-6">
 
     {/* HERO */}
-    <section className="relative overflow-hidden rounded-3xl bg-slate-950 text-white shadow-xl">
+    <section className="relative overflow-hidden rounded-3xl bg-slate-950 text-white shadow-xl smart-rail-hero">
 
       <div
         className="absolute inset-0 opacity-30"
