@@ -28,3 +28,12 @@ dist/
 
 # Archives
 *.zip
+
+.env
+.env.*
+!.env.example
+venv/
+.venv/
+node_modules/
+__pycache__/
+.pytest_cache/

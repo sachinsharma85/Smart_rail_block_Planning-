@@ -1,3 +1,4 @@
+import Copilot from './Copilot';
 import { useEffect, useMemo, useState } from 'react';
 
 import {
@@ -14,7 +15,7 @@ import {
   Legend,
 } from 'recharts';
 
-const API = 'https://smart-rail-block-planning-api.onrender.com';
+const API = import.meta.env.VITE_API_URL || 'http://127.0.0.1:8000';
 
 const navItems = [
   { id: 'dashboard', label: 'Dashboard', icon: '▦' },
@@ -1084,68 +1085,9 @@ export default function App() {
   )}
 
 </Card>
-              {/* DEPARTMENT CHART */}
+        
 
-              <Card className="p-5 hover:shadow-md transition">
-
-                <div className="mb-5">
-
-                  <h3 className="font-bold text-lg">
-                    Department-wise Blocks
-                  </h3>
-
-                  <p className="text-sm text-slate-500">
-                    Distribution across railway departments
-                  </p>
-
-                </div>
-
-                <div className="h-72">
-
-                  <ResponsiveContainer
-                    width="100%"
-                    height="100%"
-                  >
-
-                    <BarChart
-                      data={departmentData}
-                    >
-
-                      <CartesianGrid
-                        strokeDasharray="3 3"
-                        vertical={false}
-                      />
-
-                      <XAxis
-                        dataKey="department"
-                      />
-
-                      <YAxis
-                        allowDecimals={false}
-                      />
-
-                      <Tooltip />
-
-                      <Bar
-                        dataKey="blocks"
-                        name="Block Plans"
-                        radius={[
-                          8,
-                          8,
-                          0,
-                          0,
-                        ]}
-                        fill="#dc2626"
-                      />
-
-                    </BarChart>
-
-                  </ResponsiveContainer>
-
-                </div>
-
-              </Card>
-
+  
             </section>
 
             {/* =================================================
@@ -5670,7 +5612,8 @@ export default function App() {
           FOOTER
       ===================================================== */}
 
-      <footer className="px-5 md:px-8 py-6 text-center text-xs text-slate-400">
+      <Copilot api={API} onSaved={fetchData} />
+<footer className="px-5 md:px-8 py-6 text-center text-xs text-slate-400">
 
         Smart Rail Automatic Block Planning System
         · Railway Operations Control

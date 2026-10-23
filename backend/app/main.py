@@ -706,3 +706,6 @@ def generate_ai_block_plan(
             []
         )
     }
+from .copilot_api import router as copilot_router
+app.include_router(copilot_router)
+from . import bedrock_chat

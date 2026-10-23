@@ -4,13 +4,13 @@ from sqlalchemy import create_engine
 from sqlalchemy.orm import declarative_base, sessionmaker
 
 
-DATABASE_URL = os.getenv("DATABASE_URL")
+DATABASE_URL = os.getenv("DATABASE_URL") or "sqlite:///" + str(__import__("pathlib").Path(__file__).resolve().parents[1] / "railway.db")
 
 if not DATABASE_URL:
     raise RuntimeError("DATABASE_URL environment variable is not set")
 
 
-engine = create_engine(DATABASE_URL)
+engine = create_engine(DATABASE_URL, connect_args={"check_same_thread": False} if DATABASE_URL.startswith("sqlite") else {})
 
 SessionLocal = sessionmaker(
     autocommit=False,
